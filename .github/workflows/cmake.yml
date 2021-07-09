@@ -25,14 +25,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - shell: bash
-      run: echo "Installing lcov"; sudo apt-get install lcov > /dev/null
+    - name: Install LCov
+      shell: bash
+      run: sudo apt-get install lcov > /dev/null
 
     - name: Configure CMake
       working-directory: ${{github.workspace}}/bwapi
       run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Debug
 
-    - name: Test
+    - name: Run Tests
       working-directory: ${{github.workspace}}/bwapi/build
       run: cmake --build ${{github.workspace}}/bwapi/build --config Debug --target BWAPILIB_coverage
 
