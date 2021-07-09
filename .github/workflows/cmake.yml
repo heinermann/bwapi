@@ -10,17 +10,22 @@ on:
 jobs:
   build-macos:
     runs-on: macos-latest
+    
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    
     steps:
     - uses: actions/checkout@v2
 
     - name: Configure CMake
       working-directory: ${{github.workspace}}/bwapi
-      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Release
+      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=${{matrix.compiler}}
 
     - name: Build
       run: cmake --build ${{github.workspace}}/bwapi/build --config Release
   
-  test:
+  test-ubuntu:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -43,14 +48,14 @@ jobs:
         name: BWAPILIB_coverage
         path: ${{github.workspace}}/bwapi/build/BWAPILIB_coverage
 
-  package:
+  package-windows:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
 
     - name: Configure CMake
       working-directory: ${{github.workspace}}/bwapi
-      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Release
+      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=x86
 
     - name: Build
       run: cmake --build ${{github.workspace}}/bwapi/build --config Release
