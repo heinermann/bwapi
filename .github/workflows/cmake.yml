@@ -25,6 +25,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - shell: bash
+      run: echo "Installing lcov"; sudo apt-get install lcov > /dev/null
+
     - name: Configure CMake
       working-directory: ${{github.workspace}}/bwapi
       run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Debug
@@ -32,6 +35,15 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/bwapi/build
       run: cmake --build ${{github.workspace}}/bwapi/build --config Debug --target BWAPILIB_coverage
+
+    - name: Report code coverage
+      uses: zgosalvez/github-actions-report-lcov@v1
+      with:
+        coverage-files: ${{github.workspace}}/bwapi/build/BWAPILIB_coverage.info
+        minimum-coverage: 0
+        artifact-name: BWAPILIB_coverage
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: bwapi
 
   package:
     runs-on: windows-latest
