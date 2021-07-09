@@ -14,10 +14,10 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Release
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Release
+      run: cmake --build ${{github.workspace}}/bwapi/build --config Release
   
   test:
     runs-on: ubuntu-latest
@@ -25,11 +25,11 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug
+      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Debug
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: cmake --build ${{github.workspace}}/build --config Debug --target BWAPILIB_coverage
+      working-directory: ${{github.workspace}}/bwapi/build
+      run: cmake --build ${{github.workspace}}/bwapi/build --config Debug --target BWAPILIB_coverage
 
   package:
     runs-on: windows-latest
@@ -37,7 +37,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Release
+      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Release
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Release
+      run: cmake --build ${{github.workspace}}/bwapi/build --config Release
