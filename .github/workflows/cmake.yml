@@ -45,8 +45,9 @@ jobs:
       shell: bash
       run: sudo apt-get install lcov > /dev/null
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/bwapi/build --config Debug
+    - name: Configure CMake
+      working-directory: ${{github.workspace}}/bwapi
+      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Debug
 
     - name: Run Tests
       working-directory: ${{github.workspace}}/bwapi/build
