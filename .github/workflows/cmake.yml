@@ -10,7 +10,18 @@ on:
 jobs:
   build-macos:
     runs-on: macos-latest
-    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure CMake
+      working-directory: ${{github.workspace}}/bwapi
+      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/bwapi/build --config Release
+  
+  build-ubuntu:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         compiler: [gcc, clang]
@@ -24,8 +35,8 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/bwapi/build --config Release
-  
-  test-ubuntu:
+
+  test-unit:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -33,10 +44,6 @@ jobs:
     - name: Install LCov
       shell: bash
       run: sudo apt-get install lcov > /dev/null
-
-    - name: Configure CMake
-      working-directory: ${{github.workspace}}/bwapi
-      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Debug
 
     - name: Run Tests
       working-directory: ${{github.workspace}}/bwapi/build
@@ -48,14 +55,20 @@ jobs:
         name: BWAPILIB_coverage
         path: ${{github.workspace}}/bwapi/build/BWAPILIB_coverage
 
-  package-windows:
+  build-windows:
     runs-on: windows-latest
+    
+    strategy:
+      matrix:
+        platform: [Win32, x64]
+        configuration: [Release, Debug]
+    
     steps:
     - uses: actions/checkout@v2
 
     - name: Configure CMake
       working-directory: ${{github.workspace}}/bwapi
-      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_GENERATOR_PLATFORM=x86
+      run: cmake -B ${{github.workspace}}/bwapi/build -DCMAKE_BUILD_TYPE=${{matrix.configuration}} -DCMAKE_GENERATOR_PLATFORM=${{matrix.platform}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/bwapi/build --config Release
+      run: cmake --build ${{github.workspace}}/bwapi/build --config ${{matrix.configuration}}
