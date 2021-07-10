@@ -45,9 +45,12 @@ jobs:
       shell: bash
       run: sudo apt-get install lcov > /dev/null
 
+    - name: Build
+      run: cmake --build ${{github.workspace}}/bwapi/build --config Debug
+
     - name: Run Tests
       working-directory: ${{github.workspace}}/bwapi/build
-      run: cmake --build --config Debug --target BWAPILIB_coverage
+      run: cmake --build ${{github.workspace}}/bwapi/build --config Debug --target BWAPILIB_coverage
 
     - name: Report code coverage
       uses: actions/upload-artifact@v2
